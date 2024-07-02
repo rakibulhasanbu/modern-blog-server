@@ -1,5 +1,5 @@
 export interface TLogIn {
-  username: string;
+  email: string;
   password: string;
 }
 

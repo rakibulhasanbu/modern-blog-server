@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Request, Response } from "express";
 import { CatchAsyncError } from "../../utils/CatchAsyncError";
 import { userServices } from "./user.service";
@@ -9,19 +11,11 @@ const registerUser = CatchAsyncError(async (req: Request, res: Response) => {
   const userCreateData = { ...userData, username };
   const result = await userServices.registerUserIntoDB(userCreateData);
 
-  //remove password from result
-  const removePassResult = {
-    ...result.toObject(),
-    password: undefined,
-    oldPassword: undefined,
-    moreOldPassword: undefined,
-  };
-
   sendRes(res, {
     success: true,
     statusCode: 201,
     message: "User registered successfully",
-    data: removePassResult,
+    data: result,
   });
 });
 

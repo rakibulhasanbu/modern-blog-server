@@ -7,33 +7,39 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 const loginUserIntoDB = async (payload: TLogIn) => {
   //checking if the user is exists
-  const user = await User.findOne({ username: payload.username }).select(
-    "+password",
-  );
+  const user = await User.findOne({
+    "personalInfo.email": payload.email,
+  }).select("+personalInfo.password");
+
   if (!user) {
-    throw new AppError(404, `${payload.username} user not found!`);
+    throw new AppError(404, `${payload.email} this user email not found!`);
   }
   //checking if the password is matched
   const isPasswordMatched = await bcrypt.compare(
     payload.password,
     user.personalInfo.password,
   );
+
   if (!isPasswordMatched) {
-    throw new AppError(404, `${payload.password} is not correct!`);
+    throw new AppError(404, `Password is not correct!`);
   }
+
   const jwtPayload = {
-    _id: user?._id,
+    id: user?._id,
     email: user?.personalInfo.email,
   };
+
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {
     expiresIn: "1d",
   });
 
   return {
     user: {
-      _id: user._id,
+      id: user._id,
       username: user.personalInfo.username,
       email: user.personalInfo.email,
+      fullName: user.personalInfo.fullName,
+      profileImg: user.personalInfo.profileImg,
     },
     token: accessToken,
   };

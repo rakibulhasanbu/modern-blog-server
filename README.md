@@ -14,56 +14,28 @@ If you want to run the server locally on your computer, firstly clone this proje
 
 ## Server Documentation
 
-- This server is created to manage users and create courses.
-- New users are created here, and all users in the database can be seen.
-- Users can login with their username and password and take a token from the server.
-- Without token user cannot access many route that is protected.
-- Admin can create a category provide token and get all category are open for all users.
-- Admin can create a course and update the course, update course is dynamically working.
-- Users can create a review not by admin and all user are see the best course and specific course with reviews.
+# Fullstack MERN Blogging Website
 
-## Server API
+Fork this repo of "MERN Blogging Website" to start following the video tutorial.
 
-### 1. User Registration
+Checkout website demo - [Demo](https://youtu.be/J7BGuuuvDDk)
 
-Endpoint: POST `/api/auth/register`
+![Thumbnail](https://c10.patreonusercontent.com/4/patreon-media/p/post/90122909/dd5363bd03fb4a6c8fcd5d15df98e6bf/eyJ3Ijo4MjB9/1.png?token-time=1697414400&token-hash=BZ-Mzp19WnBLcCFB8LmJFDw98mpnCRGcOCt_T615miY%3D)
 
-### 2. User Login
+This website features include -
 
-Endpoint: POST `/api/auth/login`
-
-### 3. Change Password
-
-Endpoint: POST `/api/auth/change-password`
-
-### 4. Create a Course (Only Admin can do this)\*\*
-
-Endpoint: POST `/api/courses`
-
-### 5. Get Paginated and Filtered Courses.
-
-Endpoint: GET `/api/courses`
-
-### 6. Create a Category (Only Admin can do this)\*\*
-
-Endpoint: POST `/api/categories`
-
-### 7. Get All Categories\*\*
-
-Endpoint: GET `/api/categories`
-
-### 8. Create a Review (Only the user can do this)\*\*
-
-Endpoint: POST `/api/reviews`
-
-### 9. Update a Course (Only Admin can do this)\*\*
-
-Endpoint: PUT `/api/courses/:courseId`
-
-### 10. Get Course by ID with Reviews\*\*
-
-Endpoint: GET `/api/courses/:courseId/reviews`
-
-### 11. Get the Best Course Based on Average Review (Rating)\*\*
-
-Endpoint: GET `/api/course/best`
+1. Modern Blog Editor using Editor JS.
+2. Google Authentication for Users
+3. Dynamic Blog Pages on dynamic urls.
+4. Search Page for Searching Blogs & users.
+5. Dedicated Users Profile with thier social links and written blogs.
+6. Dedicated dashboard to manage blogs either published or draft.
+7. Blog Post Analytics, editable and deletable.
+8. Like interaction on Blogs with feature to comment on the blog.
+9. Reply to comments. ( A nested Comment System )
+10. Every interaction on site stores as a notification for their respective users.
+11. Recent notification highlight separating them from old notifications.
+12. Edit profile option to update social links, bio and username
+13. Also user can change login password from settings.
+14. Its mobile responsive with modern design + fade in animation on pages.
+    And much more.

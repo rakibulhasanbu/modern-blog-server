@@ -69,7 +69,7 @@ const userSchema = new Schema<TUser>(
         maxlength: [200, "Bio should not be more than 200"],
         default: "",
       },
-      profile_img: {
+      profileImg: {
         type: String,
         default: () => {
           return `https://api.dicebear.com/6.x/${
@@ -111,11 +111,11 @@ const userSchema = new Schema<TUser>(
       },
     },
     accountInfo: {
-      total_posts: {
+      totalPosts: {
         type: Number,
         default: 0,
       },
-      total_reads: {
+      totalReads: {
         type: Number,
         default: 0,
       },
