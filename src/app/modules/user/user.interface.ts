@@ -32,3 +32,7 @@ export type TUser = {
   googleAuth: boolean;
   blogs: Schema.Types.ObjectId[];
 };
+
+export type TAuthUser = {
+  accessToken: string;
+};

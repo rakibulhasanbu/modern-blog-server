@@ -11,4 +11,10 @@ userRoute.post(
   userControllers.registerUser,
 );
 
+userRoute.post(
+  "/google-auth",
+  validateRequest(userValidations.googleAuthValidation),
+  userControllers.googleAuthRegisterUser,
+);
+
 export default userRoute;

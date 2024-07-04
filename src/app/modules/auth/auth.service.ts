@@ -14,6 +14,13 @@ const loginUserIntoDB = async (payload: TLogIn) => {
   if (!user) {
     throw new AppError(404, `${payload.email} this user email not found!`);
   }
+
+  if (user?.googleAuth) {
+    throw new AppError(
+      403,
+      `Account was created using google. Try to log in with google!`,
+    );
+  }
   //checking if the password is matched
   const isPasswordMatched = await bcrypt.compare(
     payload.password,
@@ -25,8 +32,11 @@ const loginUserIntoDB = async (payload: TLogIn) => {
   }
 
   const jwtPayload = {
-    id: user?._id,
-    email: user?.personalInfo.email,
+    id: user._id,
+    username: user.personalInfo.username,
+    email: user.personalInfo.email,
+    fullName: user.personalInfo.fullName,
+    profileImg: user.personalInfo.profileImg,
   };
 
   const accessToken = jwt.sign(jwtPayload, config.jwt_access_secret as string, {

@@ -47,7 +47,7 @@ const userSchema = new Schema<TUser>(
       },
       password: {
         type: String,
-        required: true,
+        required: false,
         select: false,
       },
       oldPassword: {

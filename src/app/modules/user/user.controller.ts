@@ -19,6 +19,20 @@ const registerUser = CatchAsyncError(async (req: Request, res: Response) => {
   });
 });
 
+const googleAuthRegisterUser = CatchAsyncError(
+  async (req: Request, res: Response) => {
+    const result = await userServices.registerAuthUserIntoDB(req.body);
+
+    sendRes(res, {
+      success: true,
+      statusCode: 201,
+      message: "Login with google account successful.",
+      data: result,
+    });
+  },
+);
+
 export const userControllers = {
   registerUser,
+  googleAuthRegisterUser,
 };

@@ -3,6 +3,8 @@ import cors from "cors";
 import router from "./router";
 import notFoundRoute from "./middleware/notFoundRoute";
 import globalErrorHandler from "./middleware/globalErrorHandler";
+import admin from "firebase-admin";
+import config from "./config";
 
 const app: Application = express();
 
@@ -14,6 +16,11 @@ app.use(
     credentials: true,
   }),
 );
+
+//google config
+admin.initializeApp({
+  credential: admin.credential.cert(config.firebase as admin.ServiceAccount),
+});
 
 //application routes
 app.use("/api", router);

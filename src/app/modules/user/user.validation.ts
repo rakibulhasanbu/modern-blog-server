@@ -42,4 +42,14 @@ const registerUserValidation = z.object({
   }),
 });
 
-export const userValidations = { registerUserValidation };
+const googleAuthValidation = z.object({
+  body: z.object({
+    personalInfo: personalInfoSchema,
+    socialLinks: socialLinksSchema,
+    accountInfo: accountInfoSchema,
+    googleAuth: z.boolean().default(false),
+    blogs: z.array(z.string()).default([]),
+  }),
+});
+
+export const userValidations = { googleAuthValidation, registerUserValidation };
