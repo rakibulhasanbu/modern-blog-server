@@ -1,12 +1,13 @@
 import { Request, Response } from "express";
 import { CatchAsyncError } from "../../utils/CatchAsyncError";
 import { authServices } from "./auth.service";
-import sendRes from "../../utils/sendResponse";
+import AppError from "../../error/AppError";
+import sendResponse from "../../utils/sendResponse";
 
 const loginUser = CatchAsyncError(async (req: Request, res: Response) => {
   const result = await authServices.loginUserIntoDB(req.body);
 
-  sendRes(res, {
+  sendResponse(res, {
     success: true,
     statusCode: 200,
     message: "User login successful",
@@ -17,15 +18,12 @@ const loginUser = CatchAsyncError(async (req: Request, res: Response) => {
 const changePassword = CatchAsyncError(async (req: Request, res: Response) => {
   const result = await authServices.changePasswordIntoDB(req.body, req.user);
   if (!result) {
-    sendRes(res, {
-      success: false,
-      statusCode: 400,
-      message:
-        "Password change failed. Ensure the new password is unique and not among the last two used",
-      data: null,
-    });
+    return new AppError(
+      400,
+      "Password change failed. Ensure the new password is unique and not among the last two used",
+    );
   }
-  sendRes(res, {
+  sendResponse(res, {
     success: true,
     statusCode: 200,
     message: "Password changed successfully",

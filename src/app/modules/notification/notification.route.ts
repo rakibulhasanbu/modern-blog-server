@@ -7,7 +7,7 @@ import auth from "../../middleware/auth";
 const notificationRoute = express.Router();
 
 notificationRoute.post(
-  "/notifications",
+  "/notification",
   auth(),
   validateRequest(notificationValidation.notificationValidationSchema),
   notificationController.createNotification,
@@ -15,7 +15,14 @@ notificationRoute.post(
 
 notificationRoute.get(
   "/notifications",
-  notificationController.getAllNotification,
+  auth(),
+  notificationController.getNotificationByUserID,
+);
+
+notificationRoute.get(
+  "/new-notification",
+  auth(),
+  notificationController.getNewNotification,
 );
 
 export default notificationRoute;

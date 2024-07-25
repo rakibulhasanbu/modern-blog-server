@@ -20,7 +20,8 @@ const auth = () => {
         config.jwt_access_secret as string,
       ) as JwtPayload;
 
-      const user = await User.findById(decoded?._id);
+      const user = await User.findById(decoded?.id);
+
       if (!user) {
         throw new AppError(401, `Your provided Token is not valid user!`);
       }

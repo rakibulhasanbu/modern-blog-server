@@ -4,6 +4,11 @@ import { TBlog } from "./blog.interface";
 
 const blogSchema = new Schema<TBlog>(
   {
+    slug: {
+      type: String,
+      unique: true,
+      required: true,
+    },
     title: {
       type: String,
       required: true,
@@ -12,7 +17,7 @@ const blogSchema = new Schema<TBlog>(
       type: String,
       // required: true,
     },
-    des: {
+    description: {
       type: String,
       maxlength: 200,
       // required: true

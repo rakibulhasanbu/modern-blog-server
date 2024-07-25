@@ -60,10 +60,17 @@ const changePasswordIntoDB = async (
   userData: JwtPayload,
 ) => {
   const user = await User.findById(userData?._id).select(
-    "+password +oldPassword +moreOldPassword",
+    "+personalInfo.password +personalInfo.oldPassword +personalInfo.moreOldPassword",
   );
   if (!user) {
     throw new AppError(401, `Your provided Token is not valid user!`);
+  }
+
+  if (user.googleAuth) {
+    throw new AppError(
+      403,
+      `You can't change account password because you logged in through google!`,
+    );
   }
 
   if (payload.currentPassword === payload.newPassword) {
@@ -79,18 +86,18 @@ const changePasswordIntoDB = async (
     return null;
   }
 
-  // const isMatchWithOldPassword = await bcrypt.compare(
-  //   payload.newPassword,
-  //   user.personalInfo.oldPassword,
-  // );
-  // const isMatchWithMoreOldPassword = await bcrypt.compare(
-  //   payload.newPassword,
-  //   user.personalInfo.moreOldPassword,
-  // );
+  const isMatchWithOldPassword = await bcrypt.compare(
+    payload.newPassword,
+    user.personalInfo.oldPassword as string,
+  );
+  const isMatchWithMoreOldPassword = await bcrypt.compare(
+    payload.newPassword,
+    user.personalInfo.moreOldPassword as string,
+  );
 
-  // if (isMatchWithOldPassword || isMatchWithMoreOldPassword) {
-  //   return null;
-  // }
+  if (isMatchWithOldPassword || isMatchWithMoreOldPassword) {
+    return null;
+  }
 
   const hashPassword = await bcrypt.hash(
     payload.newPassword,

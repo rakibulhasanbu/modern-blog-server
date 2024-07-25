@@ -8,6 +8,9 @@ export default {
   database_url: process.env.DATABASE_URL,
   bcrypt_salt: process.env.BCRYPT_SALT,
   jwt_access_secret: process.env.JWT_ACCESS_SECRET,
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUD_API_KEY,
+  api_secret: process.env.CLOUD_SECRET_KEY,
   firebase: {
     type: process.env.FIREBASE_TYPE,
     project_id: process.env.FIREBASE_PROJECT_ID,

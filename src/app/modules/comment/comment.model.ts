@@ -3,10 +3,15 @@ import { TComment } from "./comment.interface";
 
 const commentSchema = new Schema<TComment>(
   {
-    blog_author: {
+    blogSlug: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "Blog",
+    },
+    blog_author: {
+      type: Schema.Types.ObjectId,
+      required: true,
+      ref: "User",
     },
     comment: {
       type: String,

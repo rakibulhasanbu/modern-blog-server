@@ -1,18 +1,19 @@
 import { Schema, Document } from "mongoose";
 
 interface Activity {
-  total_likes: number;
-  total_comments: number;
-  total_reads: number;
-  total_parent_comments: number;
+  totalLikes: number;
+  totalComments: number;
+  totalReads: number;
+  totalParentComments: number;
 }
 
 export interface TBlog extends Document {
+  slug: string;
   title: string;
-  banner?: string;
-  des?: string;
+  banner: string;
+  description: string;
   content?: unknown[];
-  tags?: string[];
+  tags: string[];
   author: Schema.Types.ObjectId;
   activity: Activity;
   comments?: Schema.Types.ObjectId[];

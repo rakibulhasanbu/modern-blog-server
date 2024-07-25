@@ -66,7 +66,7 @@ const userSchema = new Schema<TUser>(
       },
       bio: {
         type: String,
-        maxlength: [200, "Bio should not be more than 200"],
+        maxLength: [200, "Bio should not be more than 200"],
         default: "",
       },
       profileImg: {

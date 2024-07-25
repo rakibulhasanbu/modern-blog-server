@@ -36,3 +36,25 @@ export type TUser = {
 export type TAuthUser = {
   accessToken: string;
 };
+
+export type TTokenUser = {
+  id: string;
+  username: string;
+  email: string;
+  fullName: string;
+  profileImg: string;
+};
+
+export type TUpdateProfilePayload = {
+  profileImg: string;
+  bio: string;
+  username: string;
+  socialLinks: {
+    facebook: string;
+    github: string;
+    instagram: string;
+    twitter: string;
+    website: string;
+    youtube: string;
+  };
+};

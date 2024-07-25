@@ -6,10 +6,18 @@ import auth from "../../middleware/auth";
 const blogRouter = express.Router();
 
 blogRouter.post(
-  "/blogs",
+  "/blog",
   auth(),
   validateRequest(blogValidation.blogValidationSchema),
   blogController.createBlog,
 );
+
+blogRouter.get("/blogs", blogController.getLatestBlog);
+
+blogRouter.get("/my-blogs", auth(), blogController.getMyBlogs);
+
+blogRouter.get("/trending-blogs", blogController.getTrendingBlog);
+
+blogRouter.delete("/blog/:slug", auth(), blogController.deleteBlog);
 
 export default blogRouter;

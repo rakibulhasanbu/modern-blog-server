@@ -36,6 +36,7 @@
   },
   "dependencies": {
     "@types/jsonwebtoken": "^9.0.5",
+    "cloudinary": "^2.3.0",
     "firebase-admin": "^12.2.0",
     "jsonwebtoken": "^9.0.2"
   }

@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { CatchAsyncError } from "../../utils/CatchAsyncError";
 import { notificationServices } from "./notification.service";
+import sendResponse from "../../utils/sendResponse";
 
 const createNotification = CatchAsyncError(
   async (req: Request, res: Response) => {
@@ -9,7 +10,7 @@ const createNotification = CatchAsyncError(
 
     const result =
       await notificationServices.createNotificationIntoDB(notification);
-    res.status(201).json({
+    sendResponse(res, {
       success: true,
       statusCode: 201,
       message: "Notification created successfully",
@@ -18,10 +19,29 @@ const createNotification = CatchAsyncError(
   },
 );
 
-const getAllNotification = CatchAsyncError(
+const getNotificationByUserID = CatchAsyncError(
   async (req: Request, res: Response) => {
-    const result = await notificationServices.getAllNotificationFromDB();
-    res.status(200).json({
+    const result = await notificationServices.getNotificationByUserIDFromDB(
+      req.user,
+      req.query,
+    );
+
+    sendResponse(res, {
+      success: true,
+      statusCode: 200,
+      message: "Notifications retrieved successfully",
+      data: result,
+    });
+  },
+);
+
+const getNewNotification = CatchAsyncError(
+  async (req: Request, res: Response) => {
+    const result = await notificationServices.getNewNotificationFromDB(
+      req.user,
+    );
+
+    sendResponse(res, {
       success: true,
       statusCode: 200,
       message: "Categories retrieved successfully",
@@ -32,5 +52,6 @@ const getAllNotification = CatchAsyncError(
 
 export const notificationController = {
   createNotification,
-  getAllNotification,
+  getNotificationByUserID,
+  getNewNotification,
 };

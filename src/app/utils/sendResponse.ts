@@ -7,7 +7,7 @@ interface TResData<T> {
   data: T;
 }
 
-const sendRes = <T>(res: Response, data: TResData<T>) => {
+const sendResponse = <T>(res: Response, data: TResData<T>) => {
   res.status(data?.statusCode).json({
     success: data?.success,
     statusCode: data?.statusCode,
@@ -16,4 +16,4 @@ const sendRes = <T>(res: Response, data: TResData<T>) => {
   });
 };
 
-export default sendRes;
+export default sendResponse;
