@@ -7,12 +7,12 @@ import auth from "../../middleware/auth";
 const commentRoute = express.Router();
 
 commentRoute.post(
-  "/comments",
+  "/comment",
   auth(),
   validateRequest(commentValidation.commentValidationSchema),
   commentController.createComment,
 );
 
-commentRoute.get("/comments", commentController.getAllComment);
+commentRoute.get("/comments/:blogId", commentController.getAllComment);
 
 export default commentRoute;

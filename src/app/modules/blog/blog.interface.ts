@@ -1,10 +1,10 @@
 import { Schema, Document } from "mongoose";
 
 interface Activity {
-  totalLikes: number;
-  totalComments: number;
-  totalReads: number;
-  totalParentComments: number;
+  total_likes: number;
+  total_comments: number;
+  total_reads: number;
+  total_parent_comments: number;
 }
 
 export interface TBlog extends Document {
@@ -20,4 +20,11 @@ export interface TBlog extends Document {
   draft: boolean;
   createdAt?: Date;
   updatedAt?: Date;
+}
+
+export interface TBlogQuery {
+  draft: boolean;
+  tags?: { $regex: unknown; $options: string };
+  slug?: { $ne: string };
+  author?: string;
 }

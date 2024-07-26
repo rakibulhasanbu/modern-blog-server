@@ -14,7 +14,7 @@ const blogValidationSchema = z.object({
       title: z.string().trim().min(1, "Title is required"),
       banner: z.string(),
       description: z.string().optional(),
-      content: z.object({}).optional(),
+      content: z.array(z.any()).optional(),
       tags: z.array(z.string()).max(10).optional(),
       author: z.string().trim().min(1, "Author ID is required"),
       activity: activitySchema.optional(),
@@ -29,14 +29,10 @@ const blogValidationSchema = z.object({
         path: ["description"],
       },
     )
-    .refine(
-      (data) =>
-        data.draft || (data.content && Object.keys(data.content).length > 0),
-      {
-        message: "Content is required when draft is false",
-        path: ["content"],
-      },
-    )
+    .refine((data) => data.draft || (data.content && data.content.length > 0), {
+      message: "Content is required when draft is false",
+      path: ["content"],
+    })
     .refine(
       (data) => data.draft || (data.tags && Object.keys(data.tags).length > 0),
       {

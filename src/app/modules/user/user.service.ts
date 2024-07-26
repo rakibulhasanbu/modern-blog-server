@@ -121,12 +121,12 @@ const getUsersFromDB = async (query: QueryOptions) => {
     .paginate()
     .fields();
 
-  const result = await userQuery.modelQuery;
+  const data = await userQuery.modelQuery;
   const meta = await userQuery.countTotal();
 
   return {
     meta,
-    result,
+    data,
   };
 };
 

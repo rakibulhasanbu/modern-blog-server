@@ -14,7 +14,15 @@ blogRouter.post(
 
 blogRouter.get("/blogs", blogController.getLatestBlog);
 
+blogRouter.get("/blog/:slug", blogController.getBlogBySlug);
+
+blogRouter.put("/blog/:slug", auth(), blogController.updateBlog);
+
 blogRouter.get("/my-blogs", auth(), blogController.getMyBlogs);
+
+blogRouter.put("/like-blog", auth(), blogController.likeBlog);
+
+blogRouter.get("/isLiked-by-user", auth(), blogController.isLikeBlogByUser);
 
 blogRouter.get("/trending-blogs", blogController.getTrendingBlog);
 

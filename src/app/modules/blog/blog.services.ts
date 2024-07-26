@@ -1,8 +1,8 @@
 import mongoose, { QueryOptions } from "mongoose";
-import { TBlog } from "./blog.interface";
+import { TBlog, TBlogQuery } from "./blog.interface";
 import Blog from "./blog.model";
 import QueryBuilder from "../../builder/QueryBuilder";
-import { TTokenUser } from "../user/user.interface";
+import { TTokenUser, TUser } from "../user/user.interface";
 import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../error/AppError";
 import Notification from "../notification/notification.model";
@@ -14,7 +14,7 @@ const createBlogIntoDB = async (
   blogData: TBlog,
 ) => {
   const { tags, title, description, banner, content, draft } = blogData;
-  const newTags = tags?.map((tag) => tag.toLowerCase());
+  const newTags = tags?.map((tag) => tag.toLowerCase().trim());
 
   const randomString = Math.random().toString(36).substring(2, 10);
 
@@ -71,30 +71,74 @@ const createBlogIntoDB = async (
   }
 };
 
+const updateBlogBySlugIntoDB = async (
+  user: TTokenUser | JwtPayload,
+  blogData: TBlog,
+  slug: string,
+) => {
+  const { tags, title, description, banner, content, draft } = blogData;
+  const newTags = tags?.map((tag) => tag.toLowerCase().trim());
+
+  const updateBlogData = {
+    tags: newTags,
+    title,
+    slug,
+    banner,
+    description,
+    content,
+    draft: Boolean(draft),
+    author: user?.id,
+  };
+
+  const updateBlog = await Blog.findOneAndUpdate({ slug }, updateBlogData, {
+    new: true,
+    runValidators: true,
+  });
+  if (!updateBlog) {
+    throw new AppError(400, "Blog update unsuccessful!");
+  }
+  return updateBlog;
+};
+
 const getLatestBlogFromDB = async (query: QueryOptions) => {
-  const { category, id } = query;
+  const { category, id, searchTerm, limit, eliminateBlog } = query;
+
+  const blogQueryData: TBlogQuery = { draft: false };
+
+  if (category) {
+    blogQueryData.tags = { $regex: category, $options: "i" };
+  }
+
+  if (id) {
+    blogQueryData.author = id;
+  }
+
+  if (eliminateBlog) {
+    blogQueryData.slug = { $ne: eliminateBlog };
+  }
+
   const blogQuery = new QueryBuilder(
-    Blog.find({ draft: false, tags: category, author: id })
+    Blog.find(blogQueryData)
       .populate({
         path: "author",
         select:
           "personalInfo.profileImg personalInfo.fullName personalInfo.username -_id",
       })
-      .select("blogId slug title banner des activity tags createdAt -_id"),
-    query,
+      .select("slug title banner description activity tags createdAt -_id"),
+    { searchTerm, limit },
   )
-    .search(["title", "des"])
+    .search(["title", "description", "tags"])
     .filter()
     .sort()
     .paginate()
     .fields();
 
-  const result = await blogQuery.modelQuery;
+  const data = await blogQuery.modelQuery;
   const meta = await blogQuery.countTotal();
 
   return {
     meta,
-    result,
+    data,
   };
 };
 
@@ -119,23 +163,27 @@ const getMyBlogsFromDB = async (
   user: TTokenUser | JwtPayload,
   query: QueryOptions,
 ) => {
-  const { draft, deletedDocCount, page } = query;
-  const maxLimit = 5;
-  query.limit = maxLimit;
-  let skipDocs = (page - 1) * maxLimit;
-  if (deletedDocCount) {
-    skipDocs -= deletedDocCount;
-  }
+  // const { draft, deletedDocCount, page } = query;
+
+  // const maxLimit = 5;
+
+  // query.limit = maxLimit;
+
+  // let skipDocs = (page - 1) * maxLimit;
+
+  // if (deletedDocCount) {
+  //   skipDocs -= deletedDocCount;
+  // }
 
   const blogQuery = new QueryBuilder(
-    Blog.find({ draft, author: user?.id })
-      .skip(skipDocs)
+    Blog.find({ author: user?.id })
+      // .skip(skipDocs)
       .populate({
         path: "author",
         select:
           "personalInfo.profileImg personalInfo.fullName personalInfo.username -_id",
       })
-      .select("blogId slug title banner des activity draft createdAt -_id"),
+      .select("slug title banner des activity draft createdAt -_id"),
     query,
   )
     .search(["title"])
@@ -144,13 +192,102 @@ const getMyBlogsFromDB = async (
     .paginate()
     .fields();
 
-  const result = await blogQuery.modelQuery;
+  const data = await blogQuery.modelQuery;
   const meta = await blogQuery.countTotal();
 
   return {
     meta,
-    result,
+    data,
   };
+};
+
+const likeBlogsIntoDB = async (
+  user: TTokenUser | JwtPayload,
+  payload: { likedByUser: boolean; id: string },
+) => {
+  const { likedByUser, id } = payload;
+  const incrementVal = !likedByUser ? 1 : -1;
+
+  const likeBlog = await Blog.findByIdAndUpdate(id, {
+    $inc: { "activity.total_likes": incrementVal },
+    new: true,
+    runValidators: true,
+  });
+
+  if (!likeBlog) {
+    throw new AppError(400, "Like blog successful.");
+  }
+
+  const notificationData = {
+    type: "like",
+    blog: id,
+    notificationFor: likeBlog?.author,
+    user: user?.id,
+  };
+  if (!likedByUser) {
+    const createNoti = await Notification.create(notificationData);
+
+    if (!createNoti) {
+      throw new AppError(400, "Notification create successful.");
+    }
+  } else {
+    const deleteNoti = await Notification.findOneAndDelete(notificationData);
+
+    if (!deleteNoti) {
+      throw new AppError(400, "Notification delete unsuccessful.");
+    }
+  }
+
+  return likeBlog;
+};
+
+const getIsLikedBlogByUserFromDB = async (
+  user: TTokenUser | JwtPayload,
+  query: QueryOptions,
+) => {
+  const { id } = query;
+  const isLikedByUser = await Notification.exists({
+    user: user?.id,
+    type: "like",
+    blog: id,
+  });
+
+  if (!isLikedByUser) {
+    return { _id: null };
+  }
+
+  return isLikedByUser;
+};
+
+const getBlogsBySlugFromDB = async (
+  slug: string,
+  query: { mode: string } | QueryOptions,
+) => {
+  const { mode } = query;
+  const incrementVal = mode !== "edit" ? 1 : 0;
+  const findAndUpdateBlog = await Blog.findOneAndUpdate(
+    { slug },
+    { $inc: { "activity.total_reads": incrementVal } },
+    { new: true, runValidators: true },
+  ).populate({
+    path: "author",
+    select:
+      "personalInfo.profileImg personalInfo.fullName personalInfo.username",
+  });
+
+  if (!findAndUpdateBlog) {
+    throw new AppError(400, "Blog retrieved unsuccessful.");
+  }
+
+  await User.findOneAndUpdate(
+    {
+      "personalInfo.username": (findAndUpdateBlog?.author as unknown as TUser)
+        ?.personalInfo?.username,
+    },
+    { $inc: { "accountInfo.totalReads": incrementVal } },
+  );
+
+  return findAndUpdateBlog;
 };
 
 const getBlogsByUserID = async (userId: string) => {
@@ -192,9 +329,13 @@ const deleteBlogBySlugIntoDB = async (
 
 export const blogService = {
   createBlogIntoDB,
+  updateBlogBySlugIntoDB,
   getLatestBlogFromDB,
   getMyBlogsFromDB,
   getTrendingBlogFromDB,
   getBlogsByUserID,
   deleteBlogBySlugIntoDB,
+  getBlogsBySlugFromDB,
+  likeBlogsIntoDB,
+  getIsLikedBlogByUserFromDB,
 };

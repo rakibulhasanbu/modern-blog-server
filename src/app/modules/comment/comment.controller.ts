@@ -3,10 +3,8 @@ import { CatchAsyncError } from "../../utils/CatchAsyncError";
 import { commentServices } from "./comment.service";
 
 const createComment = CatchAsyncError(async (req: Request, res: Response) => {
-  const comment = req.body;
-  comment.createdBy = req.user._id;
+  const result = await commentServices.createCommentIntoDB(req.user, req.body);
 
-  const result = await commentServices.createCommentIntoDB(comment);
   res.status(201).json({
     success: true,
     statusCode: 201,
@@ -16,11 +14,17 @@ const createComment = CatchAsyncError(async (req: Request, res: Response) => {
 });
 
 const getAllComment = CatchAsyncError(async (req: Request, res: Response) => {
-  const result = await commentServices.getAllCommentFromDB();
+  const { blogId } = req.params;
+
+  const result = await commentServices.getAllCommentByBlogIdFromDB(
+    blogId,
+    req.query,
+  );
+
   res.status(200).json({
     success: true,
     statusCode: 200,
-    message: "Categories retrieved successfully",
+    message: "Comments retrieved successfully",
     data: result,
   });
 });

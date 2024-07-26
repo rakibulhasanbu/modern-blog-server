@@ -3,12 +3,12 @@ import { TComment } from "./comment.interface";
 
 const commentSchema = new Schema<TComment>(
   {
-    blogSlug: {
+    blogId: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "Blog",
     },
-    blog_author: {
+    blogAuthor: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "User",
@@ -17,17 +17,18 @@ const commentSchema = new Schema<TComment>(
       type: String,
       required: true,
     },
-    children: {
-      type: [Schema.Types.ObjectId],
-      ref: "Comment",
-    },
-    commented_by: {
+    commentedBy: {
       type: Schema.Types.ObjectId,
       require: true,
       ref: "User",
     },
+    children: {
+      type: [Schema.Types.ObjectId],
+      ref: "Comment",
+    },
     isReply: {
       type: Boolean,
+      default: false,
     },
     parent: {
       type: Schema.Types.ObjectId,

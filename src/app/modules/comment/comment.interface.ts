@@ -1,13 +1,21 @@
-import { Schema, Document } from "mongoose";
+import { Schema, Document, ObjectId } from "mongoose";
 
 export interface TComment extends Document {
-  blogSlug: Schema.Types.ObjectId;
-  blog_author: Schema.Types.ObjectId;
+  blogId: Schema.Types.ObjectId;
+  blogAuthor: Schema.Types.ObjectId;
   comment: string;
   children?: Schema.Types.ObjectId[];
-  commented_by: Schema.Types.ObjectId;
+  commentedBy: Schema.Types.ObjectId;
   isReply?: boolean;
   parent?: Schema.Types.ObjectId;
-  createdAt?: Date;
-  updatedAt?: Date;
+  replyingTo?: ObjectId;
+}
+
+export interface TCommentObj {
+  blogId: ObjectId;
+  blogAuthor: ObjectId;
+  comment: string;
+  commentedBy: ObjectId;
+  parent?: ObjectId;
+  isReply?: boolean;
 }
