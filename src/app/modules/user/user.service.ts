@@ -132,7 +132,7 @@ const getUsersFromDB = async (query: QueryOptions) => {
 
 const getUserByUsernameFromDB = async (username: string) => {
   return await User.findOne({ "personalInfo.username": username }).select(
-    "-personalInfo.password -personalInfo.moreOldPassword -personalInfo.oldPassword -googleAuth -updatedAt -blogs",
+    "-personalInfo.password -personalInfo.moreOldPassword -personalInfo.oldPassword -updatedAt -blogs",
   );
 };
 
@@ -140,7 +140,7 @@ const updateUserProfile = async (
   user: TTokenUser | JwtPayload,
   payload: TUpdateProfilePayload,
 ) => {
-  const { profileImg, bio, username, socialLinks } = payload;
+  const { profileImg, bio, socialLinks } = payload;
   const isUserExist = await User.findById(user?.id);
   if (!isUserExist) {
     throw new AppError(404, "User not Exist!");
@@ -162,19 +162,19 @@ const updateUserProfile = async (
       throw new AppError(400, "Failed to update profile!");
     }
   }
-  if (username) {
-    const updateProfileUsername = await User.findByIdAndUpdate(
-      user?.id,
-      { "personalInfo.username": username },
-      { new: true, runValidators: true },
-    );
-    if (!updateProfileUsername) {
-      throw new AppError(
-        400,
-        `${username} is not available. Username Must be unique!`,
-      );
-    }
-  }
+  // if (username) {
+  //   const updateProfileUsername = await User.findByIdAndUpdate(
+  //     user?.id,
+  //     { "personalInfo.username": username },
+  //     { new: true, runValidators: true },
+  //   );
+  //   if (!updateProfileUsername) {
+  //     throw new AppError(
+  //       400,
+  //       `${username} is not available. Username Must be unique!`,
+  //     );
+  //   }
+  // }
   if (bio) {
     const updateProfileBio = await User.findByIdAndUpdate(
       user?.id,
@@ -186,19 +186,19 @@ const updateUserProfile = async (
     }
   }
   if (socialLinks) {
-    const socialLinksArray = Object.keys(socialLinks);
+    const socialLinksArray = Object.keys(socialLinks) as Array<
+      keyof typeof socialLinks
+    >;
 
     for (let i = 0; i < socialLinksArray.length; i++) {
-      if (socialLinks[socialLinksArray[i]].length) {
-        const hostname = new URL(socialLinks[socialLinksArray[i]]).hostname;
+      const key = socialLinksArray[i];
+      if (socialLinks[key].length) {
+        const hostname = new URL(socialLinks[key]).hostname;
 
-        if (
-          !hostname.includes(`${socialLinksArray[i]}.com`) &&
-          socialLinksArray[i] !== "website"
-        ) {
+        if (!hostname.includes(`${key}.com`) && key !== "website") {
           throw new AppError(
             403,
-            `${socialLinksArray[i]} link is invalid. You must enter a valid url`,
+            `${key} link is invalid. You must enter a valid URL`,
           );
         }
       }

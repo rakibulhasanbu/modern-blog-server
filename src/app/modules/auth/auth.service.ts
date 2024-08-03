@@ -59,7 +59,7 @@ const changePasswordIntoDB = async (
   payload: TChangePassword,
   userData: JwtPayload,
 ) => {
-  const user = await User.findById(userData?._id).select(
+  const user = await User.findById(userData?.id).select(
     "+personalInfo.password +personalInfo.oldPassword +personalInfo.moreOldPassword",
   );
   if (!user) {

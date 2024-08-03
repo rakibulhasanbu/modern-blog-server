@@ -20,8 +20,8 @@ userRoute.post(
 
 userRoute.get("/users", userControllers.getUsers);
 
-userRoute.get("/update-profile", auth(), userControllers.updateUserProfile);
+userRoute.put("/update-profile", auth(), userControllers.updateUserProfile);
 
-userRoute.get("/user/:username", userControllers.getUserByUsername);
+userRoute.get("/user/:username", auth(), userControllers.getUserByUsername);
 
 export default userRoute;

@@ -15,11 +15,11 @@ const getNotificationByUserIDFromDB = async (
   user: TTokenUser | JwtPayload,
   query: QueryOptions,
 ) => {
-  console.log(user, query);
   const maxLimit = 10;
   const { filter, page, deletedDocCount } = query;
   let skipDocs = (page - 1) * maxLimit;
   const findQuery = { notificationFor: user.id, user: { $ne: user?.id } };
+
   if (filter !== "all") {
     findQuery.type = filter;
   }

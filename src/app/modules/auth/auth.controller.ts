@@ -17,12 +17,14 @@ const loginUser = CatchAsyncError(async (req: Request, res: Response) => {
 
 const changePassword = CatchAsyncError(async (req: Request, res: Response) => {
   const result = await authServices.changePasswordIntoDB(req.body, req.user);
+
   if (!result) {
     return new AppError(
       400,
       "Password change failed. Ensure the new password is unique and not among the last two used",
     );
   }
+
   sendResponse(res, {
     success: true,
     statusCode: 200,
