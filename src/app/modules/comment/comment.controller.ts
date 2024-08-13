@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { CatchAsyncError } from "@utils/CatchAsyncError";
-import sendResponse from "@utils/sendResponse";
+import { CatchAsyncError } from "../../../utils/CatchAsyncError";
+import sendResponse from "../../../utils/sendResponse";
 import { commentServices } from "./comment.service";
 
 const createComment = CatchAsyncError(async (req: Request, res: Response) => {

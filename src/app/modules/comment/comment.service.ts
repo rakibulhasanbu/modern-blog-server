@@ -1,10 +1,10 @@
 import { JwtPayload } from "jsonwebtoken";
 import { TComment, TCommentObj } from "./comment.interface";
 import Comment from "./comment.model";
-import AppError from "@error/AppError";
 import Blog from "../blog/blog.model";
 import Notification from "../notification/notification.model";
-import QueryBuilder from "@builder/QueryBuilder";
+import QueryBuilder from "../../../builder/QueryBuilder";
+import AppError from "../../../error/AppError";
 import { QueryOptions } from "mongoose";
 import { TNotification } from "../notification/notification.interface";
 import { TTokenUser } from "../auth/auth.interface";

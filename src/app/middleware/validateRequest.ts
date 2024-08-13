@@ -1,6 +1,6 @@
-import { CatchAsyncError } from "@utils/CatchAsyncError";
 import { NextFunction, Request, Response } from "express";
 import { AnyZodObject } from "zod";
+import { CatchAsyncError } from "../../utils/CatchAsyncError";
 
 const validateRequest = (schema: AnyZodObject) => {
   return CatchAsyncError(

@@ -1,4 +1,4 @@
-import AppError from "@error/AppError";
+import AppError from "../../../error/AppError";
 import User from "./auth.model";
 import {
   TAuthUser,
@@ -10,11 +10,11 @@ import {
 } from "./auth.interface";
 import bcrypt from "bcryptjs";
 import jwt, { JwtPayload } from "jsonwebtoken";
-import config from "@config/index";
+import config from "../../../config";
 import { QueryOptions } from "mongoose";
 import cloudinary from "cloudinary";
-import QueryBuilder from "@builder/QueryBuilder";
 import { getAuth } from "firebase-admin/auth";
+import QueryBuilder from "../../../builder/QueryBuilder";
 
 const loginUserIntoDB = async (payload: TLogIn) => {
   //checking if the user is exists

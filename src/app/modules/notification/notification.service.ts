@@ -3,8 +3,8 @@ import { TGetNotificationQuery, TNotification } from "./notification.interface";
 import Notification from "./notification.model";
 import User from "../auth/auth.model";
 import { QueryOptions } from "mongoose";
-import QueryBuilder from "@builder/QueryBuilder";
-import AppError from "@error/AppError";
+import QueryBuilder from "../../../builder/QueryBuilder";
+import AppError from "../../../error/AppError";
 import { TTokenUser } from "../auth/auth.interface";
 
 const createNotificationIntoDB = async (notification: TNotification) => {

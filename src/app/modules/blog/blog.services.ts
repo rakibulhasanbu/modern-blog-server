@@ -2,11 +2,11 @@ import mongoose, { QueryOptions } from "mongoose";
 import { TBlog, TBlogQuery } from "./blog.interface";
 import Blog from "./blog.model";
 import { JwtPayload } from "jsonwebtoken";
-import AppError from "@error/AppError";
+import AppError from "../../../error/AppError";
 import Notification from "../notification/notification.model";
 import Comment from "../comment/comment.model";
 import User from "../auth/auth.model";
-import QueryBuilder from "@builder/QueryBuilder";
+import QueryBuilder from "../../../builder/QueryBuilder";
 import { TTokenUser, TUser } from "../auth/auth.interface";
 
 const createBlogIntoDB = async (

@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import User from "../modules/auth/auth.model";
-import config from "@config/index";
-import AppError from "@error/AppError";
-import { CatchAsyncError } from "@utils/CatchAsyncError";
+import { CatchAsyncError } from "../../utils/CatchAsyncError";
+import AppError from "../../error/AppError";
+import config from "../../config";
 
 const auth = () => {
   return CatchAsyncError(

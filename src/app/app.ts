@@ -4,7 +4,7 @@ import router from "./router";
 import notFoundRoute from "./middleware/notFoundRoute";
 import globalErrorHandler from "./middleware/globalErrorHandler";
 import admin from "firebase-admin";
-import config from "@config/index";
+import config from "../config";
 
 const app: Application = express();
 
