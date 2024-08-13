@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { blogService } from "./blog.services";
-import { CatchAsyncError } from "../../utils/CatchAsyncError";
-import sendResponse from "../../utils/sendResponse";
+import { CatchAsyncError } from "@utils/CatchAsyncError";
+import sendResponse from "@utils/sendResponse";
 
 const createBlog = CatchAsyncError(async (req: Request, res: Response) => {
   const result = await blogService.createBlogIntoDB(req.user, req.body);

@@ -19,4 +19,22 @@ authRoute.post(
   authControllers.changePassword,
 );
 
+authRoute.post(
+  "/register",
+  validateRequest(authValidations.registerUserValidation),
+  authControllers.registerUser,
+);
+
+authRoute.post(
+  "/google-auth",
+  validateRequest(authValidations.googleAuthValidation),
+  authControllers.googleAuthRegisterUser,
+);
+
+authRoute.get("/users", authControllers.getUsers);
+
+authRoute.put("/update-profile", auth(), authControllers.updateUserProfile);
+
+authRoute.get("/user/:username", auth(), authControllers.getUserByUsername);
+
 export default authRoute;

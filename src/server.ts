@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import config from "./app/config";
 import app from "./app/app";
 import { v2 as cloudinary } from "cloudinary";
+import config from "./config";
 
 //cloudinary config
 cloudinary.config({

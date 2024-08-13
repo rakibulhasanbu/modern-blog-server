@@ -1,13 +1,13 @@
 import mongoose, { QueryOptions } from "mongoose";
 import { TBlog, TBlogQuery } from "./blog.interface";
 import Blog from "./blog.model";
-import QueryBuilder from "../../builder/QueryBuilder";
-import { TTokenUser, TUser } from "../user/user.interface";
 import { JwtPayload } from "jsonwebtoken";
-import AppError from "../../error/AppError";
+import AppError from "@error/AppError";
 import Notification from "../notification/notification.model";
 import Comment from "../comment/comment.model";
-import User from "../user/user.model";
+import User from "../auth/auth.model";
+import QueryBuilder from "@builder/QueryBuilder";
+import { TTokenUser, TUser } from "../auth/auth.interface";
 
 const createBlogIntoDB = async (
   user: TTokenUser | JwtPayload,
@@ -305,7 +305,7 @@ const deleteBlogBySlugIntoDB = async (
     throw new AppError(403, "You have no access to delete this blog.");
   }
   const deleteBlog = await Blog.findOneAndDelete({ author: user?.id, slug });
-  console.log(deleteBlog);
+
   if (!deleteBlog) {
     throw new AppError(400, "Delete blog unsuccessful.");
   }

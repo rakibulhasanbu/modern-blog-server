@@ -1,11 +1,12 @@
 import { Request, Response } from "express";
-import { CatchAsyncError } from "../../utils/CatchAsyncError";
+import { CatchAsyncError } from "@utils/CatchAsyncError";
+import sendResponse from "@utils/sendResponse";
 import { commentServices } from "./comment.service";
 
 const createComment = CatchAsyncError(async (req: Request, res: Response) => {
   const result = await commentServices.createCommentIntoDB(req.user, req.body);
 
-  res.status(201).json({
+  sendResponse(res, {
     success: true,
     statusCode: 201,
     message: "Comment created successfully",
@@ -21,7 +22,7 @@ const getAllComment = CatchAsyncError(async (req: Request, res: Response) => {
     req.query,
   );
 
-  res.status(200).json({
+  sendResponse(res, {
     success: true,
     statusCode: 200,
     message: "Comments retrieved successfully",

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import { CatchAsyncError } from "../../utils/CatchAsyncError";
 import { notificationServices } from "./notification.service";
-import sendResponse from "../../utils/sendResponse";
+import { CatchAsyncError } from "@utils/CatchAsyncError";
+import sendResponse from "@utils/sendResponse";
 
 const createNotification = CatchAsyncError(
   async (req: Request, res: Response) => {

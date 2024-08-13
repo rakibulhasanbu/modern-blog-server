@@ -16,3 +16,9 @@ export interface TNotificationQuery {
   filter: string;
   deletedDocCount: number;
 }
+
+export interface TGetNotificationQuery {
+  notificationFor: string;
+  user: unknown;
+  type?: string;
+}

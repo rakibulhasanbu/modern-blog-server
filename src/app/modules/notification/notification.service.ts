@@ -1,11 +1,11 @@
 import { JwtPayload } from "jsonwebtoken";
-import { TTokenUser } from "../user/user.interface";
-import { TNotification } from "./notification.interface";
+import { TGetNotificationQuery, TNotification } from "./notification.interface";
 import Notification from "./notification.model";
-import AppError from "../../error/AppError";
-import User from "../user/user.model";
+import User from "../auth/auth.model";
 import { QueryOptions } from "mongoose";
-import QueryBuilder from "../../builder/QueryBuilder";
+import QueryBuilder from "@builder/QueryBuilder";
+import AppError from "@error/AppError";
+import { TTokenUser } from "../auth/auth.interface";
 
 const createNotificationIntoDB = async (notification: TNotification) => {
   return await Notification.create(notification);
@@ -17,8 +17,13 @@ const getNotificationByUserIDFromDB = async (
 ) => {
   const maxLimit = 10;
   const { filter, page, deletedDocCount } = query;
+
   let skipDocs = (page - 1) * maxLimit;
-  const findQuery = { notificationFor: user.id, user: { $ne: user?.id } };
+
+  const findQuery: TGetNotificationQuery = {
+    notificationFor: user.id,
+    user: { $ne: user?.id },
+  };
 
   if (filter !== "all") {
     findQuery.type = filter;

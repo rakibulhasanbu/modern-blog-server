@@ -1,7 +1,7 @@
 import { Schema, model } from "mongoose";
 import bcrypt from "bcryptjs";
-import config from "../../config";
-import { TUser } from "./user.interface";
+import config from "@config/index";
+import { TUser } from "./auth.interface";
 
 const profile_imgs_name_list = [
   "Garfield",
